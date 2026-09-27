@@ -10,7 +10,7 @@ Everything shares one lane: near-monochrome, type-led, keyboard-first. Restraint
 ### Selected work
 
 - **[design](https://github.com/glebstarchikov/design)**: the unified design system behind everything I ship
-- **[Launchpad](https://github.com/glebstarchikov/Launchpad)**: self-hosted founder command center · Bun · Hono · React · SQLite
+- **[launchpad](https://github.com/glebstarchikov/Launchpad)**: self-hosted founder command center · Bun · Hono · React · SQLite
 - **[claude-widget](https://github.com/glebstarchikov/claude-widget)**: the Claude Code critter, living in your Mac menu bar
 - **[good-eye](https://github.com/glebstarchikov/good-eye)**: a searchable design-inspiration database for Claude, via MCP
 - **[rag-workshop](https://github.com/glebstarchikov/rag-workshop)**: a notebook that teaches RAG to non-technical people
