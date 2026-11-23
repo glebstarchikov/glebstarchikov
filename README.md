@@ -1,4 +1,4 @@
-<a href="https://glebstarchikov.nl"><img src="assets/header.svg" width="100%" alt="Pixel portrait of Gleb Starchikov on Philips blue. Founder of AI Natives. Building for an AI-native future, where people and agents work well together. AI adoption at Philips, RSM student."></a>
+<a href="https://glebstarchikov.nl"><picture><source media="(prefers-color-scheme: dark)" srcset="assets/header-dark.svg"><img src="assets/header-light.svg" width="100%" alt="Pixel desk with an open laptop, a mug, and a plant, on Philips blue. Gleb Starchikov, founder of AI Natives. Building for an AI-native future, where people and agents work well together. AI adoption at Philips, RSM student."></picture></a>
 
 <p>
 <a href="https://github.com/glebstarchikov/plainly"><picture><source media="(prefers-color-scheme: dark)" srcset="assets/card-plainly-dark.svg"><img src="assets/card-plainly-light.svg" width="49%" alt="plainly: A no-code content editor on top of a site's git repo."></picture></a>
