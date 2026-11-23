@@ -109,16 +109,6 @@ class Desk:
                 if ((x - cx) / rx) ** 2 + ((y - cy) / ry) ** 2 <= 1.05:
                     self.set(x, y, ch)
 
-    def blade(self, x, top, height, fill):
-        self.set(x + 2, top, "ink")
-        self.rect(x + 1, top + 1, 3, 1, "ink")
-        self.set(x + 2, top + 1, fill)
-        body = height - 2
-        self.rect(x, top + 2, 5, body, "ink")
-        self.rect(x + 1, top + 3, 3, max(body - 2, 1), fill)
-        self.rect(x + 2, top + 3, 1, max(body - 2, 1), "leaf2")
-
-
 def desk_grid():
     """Open laptop, mug, and plant on a desk. One cell per entry."""
     g = Desk()
@@ -127,17 +117,23 @@ def desk_grid():
     g.rect(3, desk_y + 1, 144, 6, "desk")
     g.rect(3, desk_y + 1, 144, 1, "hi")
 
-    for bx, top, height, fill in (
-        (10, 40, 36, "leaf"),
-        (16, 28, 48, "leaf"),
-        (22, 22, 54, "leaf2"),
-        (28, 30, 46, "leaf"),
-        (34, 42, 34, "leaf"),
-    ):
-        g.blade(bx, top, height, fill)
-    g.frame(12, 78, 26, 22, "ink", "pot", t=1)
-    g.frame(8, 74, 34, 6, "ink", "pot", t=1)
-    g.rect(13, 79, 24, 3, "coffee")
+    # Pothos. Round leaves on short stems spill over a clay pot that
+    # sits on the desk. The laptop base starts at x=52, so the plant stays left of it.
+    def leaf(cx, cy, rx, ry):
+        g.ellipse(cx, cy, rx + 1, ry + 1, "ink")
+        g.ellipse(cx, cy, rx, ry, "leaf")
+        g.ellipse(cx - max(rx // 3, 1), cy - max(ry // 3, 1), max(rx // 2, 2), max(ry // 3, 2), "leaf3")
+        g.rect(cx, cy - ry + 2, 1, max(ry - 1, 1), "leaf2")
+
+    leaf(24, 68, 8, 8)             # back leaf, sitting in the cluster
+    g.rect(23, 74, 2, 8, "stem")   # short stem, tucked into the leaves below
+    g.frame(16, 90, 18, 10, "ink", "pot", t=1)
+    g.frame(10, 84, 30, 7, "ink", "rim", t=1)
+    g.rect(17, 91, 16, 2, "soil")
+    # Side leaves hang over the rim. The clay pot stays visible under them.
+    leaf(11, 86, 9, 7)
+    leaf(38, 88, 8, 7)
+    leaf(24, 88, 6, 5)
 
     base_x, base_y, base_w, base_h = 52, 78, 62, 22
     g.frame(base_x, base_y, base_w, base_h, "ink", "deck", t=2)
@@ -190,28 +186,34 @@ def desk_grid():
 
 
 def scene_colors(theme):
-    """Sprite palette only. The banner stays Philips blue. The scene does not."""
+    """Desk, laptop, and mug stay on the Sprite palette. The plant is green
+    so it reads on the Philips blue banner, with a clay pot."""
     t = THEMES[theme]
     if theme == "light":
         colors = {
             "ink": t["ink"], "desk": t["card"], "edge": t["muted"], "screen": t["bg"],
             "type": t["muted"], "key": t["card"], "deck": t["muted"], "mug": t["bg"],
-            "coffee": t["ink"], "leaf": t["muted"], "leaf2": t["ink"], "pot": t["line"],
-            "steam": t["bg"], "hinge": t["ink"], "hi": t["bg"],
+            "coffee": t["ink"], "steam": t["bg"], "hinge": t["ink"], "hi": t["bg"],
+            "leaf": "#2F8A3A", "leaf2": "#1B5C28", "leaf3": "#8FCB6A", "stem": "#246B32",
+            "pot": "#A56B48", "rim": "#C4A07A", "soil": "#4E3424",
         }
     else:
         colors = {
             "ink": t["ink"], "desk": t["card"], "edge": t["line"], "screen": t["bg"],
             "type": t["muted"], "key": t["muted"], "deck": t["bg"], "mug": t["ink"],
-            "coffee": t["card"], "leaf": t["muted"], "leaf2": t["ink"], "pot": t["line"],
-            "steam": t["ink"], "hinge": t["muted"], "hi": t["muted"],
+            "coffee": t["card"], "steam": t["ink"], "hinge": t["muted"], "hi": t["muted"],
+            "leaf": "#5EAF56", "leaf2": "#2F7A38", "leaf3": "#C6E8A4", "stem": "#7FCB72",
+            "pot": "#C4A07A", "rim": "#E4CDB0", "soil": "#3A2A1E",
         }
-    allowed = {v.lower() for v in t.values() if isinstance(v, str)}
+    palette = {v.lower() for v in t.values() if isinstance(v, str)}
+    plant = {"leaf", "leaf2", "leaf3", "stem", "pot", "rim", "soil"}
     for role, hexc in colors.items():
-        if hexc.lower() not in allowed or hexc.lower() in (BLUE.lower(), t["accent"].lower()):
+        if hexc.lower() in (BLUE.lower(), t["accent"].lower()):
+            raise SystemExit(f"scene color {role}={hexc} is Philips blue")
+        if role not in plant and hexc.lower() not in palette:
             raise SystemExit(f"scene color {role}={hexc} is outside the {theme} palette")
         red, green, blue = (int(hexc[i:i + 2], 16) for i in (1, 3, 5))
-        if red > 180 and green < 160 and blue < 120:
+        if role not in ("pot", "rim", "soil") and red > 180 and green < 160 and blue < 120:
             raise SystemExit(f"scene color {role}={hexc} reads as orange")
     return colors
 
